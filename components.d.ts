@@ -17,6 +17,7 @@ declare module '@vue/runtime-core' {
     BlogInformalEssay: typeof import('./src/components/life/BlogInformalEssay.vue')['default']
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
+    ElSwitch: typeof import('element-plus/es')['ElSwitch']
     TypeWriter: typeof import('./src/components/TypeWriter.vue')['default']
     WebSiteNavigation: typeof import('./src/components/function/WebSiteNavigation.vue')['default']
   }

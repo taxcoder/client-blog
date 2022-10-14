@@ -11,7 +11,7 @@
  * @createTime: 2022/10/11 23:58
  * @description: 实现打字机效果
  */
-import {computed, ref, onUnmounted, onMounted, Ref,watch} from 'vue'
+import {computed, ref, onUnmounted, onMounted, Ref, watch} from 'vue'
 
 let opacityCount: Ref<number> = ref(1)
 let printTimer: any = ref(0)
@@ -23,11 +23,12 @@ const {text} = defineProps<{ text: string }>();
 
 const printText = computed(() => {
   return message.value;
-})
+});
 
+//@ts-ignore
 const twinkle = computed(() => {
-    return {'--opacityCount': opacityCount.value}
-})
+  return {'--opacityCount': opacityCount.value}
+});
 
 /**
  * 网页跑起来，直接运行此JS代码
@@ -53,7 +54,6 @@ const updateMessage = () => {
         count.value++;
         requestAnimationFrame(print)
       }, 135)
-
     }
   })
 }
@@ -61,15 +61,15 @@ const updateMessage = () => {
 onMounted(() => {
   setTimeout(() => {
     updateMessage();
-  },500)
+  }, 500)
 })
 
 onUnmounted(() => {
   clearTimeout(printTimer.value);
 })
 
-watch(() => message.value,(newValue) => {
-  if(newValue.length !== text.length) {
+watch(() => message.value, (newValue) => {
+  if (newValue.length !== text.length) {
     clearTimeout(opacityTimer.value)
     opacityCount.value = 1;
     return;
@@ -77,20 +77,33 @@ watch(() => message.value,(newValue) => {
 
   requestAnimationFrame(function count() {
     opacityCount.value === 0 ? opacityCount.value = 1 : opacityCount.value = 0;
-    opacityTimer.value =  setTimeout(() => {
+    opacityTimer.value = setTimeout(() => {
       requestAnimationFrame(count)
-    },800)
+    }, 800)
   })
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@media (max-height: 400px) {
+  #TypeWriter {
+    animation: hideTypeWriter 0.5s 1 forwards;
+  }
+}
+
+@media (min-height: 400px) {
+  #TypeWriter {
+    animation: showTypeWriter 0.5s 1 forwards;
+  }
+}
+
 #TypeWriter {
   white-space: nowrap;
   font-size: 2em;
   position: relative;
   color: white;
-  font-family: 'dosis', sans-serif;
+  font-family: 'honglei',cursive;
+  user-select: none;
 }
 
 #TypeWriter::before {
@@ -102,5 +115,23 @@ watch(() => message.value,(newValue) => {
   right: -5px;
   background: white;
   opacity: var(--opacityCount);
+}
+
+@keyframes hideTypeWriter {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes showTypeWriter {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>
