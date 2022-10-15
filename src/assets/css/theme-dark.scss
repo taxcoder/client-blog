@@ -3,3 +3,26 @@
   color: white;
   box-shadow: 0 5px 20px -4px black;
 }
+
+#Mask.dark {
+  background: rgba(0, 0, 0, .6) !important;
+}
+
+#search-archives.dark {
+  background: black !important;
+  border: 1px solid #4e525c !important;
+}
+
+.archives-name.dark {
+  color: rgba(255,255,255,0.9) !important;
+}
+.archives-name.dark:hover{
+  color: #1fc7b6!important;
+}
+.result-option.dark{
+  color: white;
+}
+
+a.dark{
+  color: rgba(255,255,255,0.9) !important;
+}

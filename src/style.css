@@ -1,9 +1,20 @@
-body{
-  margin: 0;
-  padding: 0;
-  text-decoration: none;
+body {
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    font-family: HarmonyOS, Arial, Helvetica, sans-serif;
 }
 
 ::-webkit-scrollbar {
-  display: none;
+    display: none;
+}
+
+ul, li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
 }

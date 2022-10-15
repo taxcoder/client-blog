@@ -9,3 +9,23 @@ $light-box-shadow: 0 5px 20px -4px rgb(0 0 0 / 50%);
 $dark-background: rgb(52, 52, 52);
 $dark-color: white;
 $dark-box-shadow: 0 5px 20px -4px black;
+
+::v-deep(.is-horizontal) {
+  display: none;
+}
+
+::v-deep(.is-vertical) {
+  width: 12px;
+  right: 0;
+  z-index: 9999;
+}
+
+::v-deep(.el-scrollbar__thumb) {
+  border-radius: 50px;
+  opacity: 1;
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .4) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .4) 50%, rgba(255, 255, 255, .4) 75%, transparent 75%, transparent);
+}
+
+::v-deep(.el-loading-mask) {
+  top: -115px;
+}

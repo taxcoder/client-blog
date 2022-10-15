@@ -23,3 +23,11 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+    /* 重命名字体名 */
+    font-family: 'HarmonyOS';
+    /* 引入字体 */
+    src: url('./HarmonyOSHans-Regular.woff2');
+    font-weight: normal;
+    font-style: normal;
+}

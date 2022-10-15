@@ -3,7 +3,7 @@
        :style="[{'--width': !hideArrowDown ? '75px' : '58px'}]"
        @mouseenter="mouseenter"
        @mouseleave="mouseleave">
-    <el-icon class="icons" :style="strokeStyle">
+    <el-icon class="icons">
       <slot name="icon"></slot>
     </el-icon>
     <span class="texts"><slot name="text"></slot></span>
@@ -113,9 +113,6 @@ export default defineComponent({
     }
   },
   computed: {
-    strokeStyle() {
-      return this.theme() ? {'stroke': this.hideNavigationBar ? 'white' : 'white'} : {'stroke': this.hideNavigationBar ? 'white' : 'black'}
-    },
     openOption() {
       return this.showOption ? {display: 'block'} : {display: 'none'}
     }
@@ -125,21 +122,6 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import "src/assets/css/theme-dark.scss";
-
-//@media (max-width: 550px) {
-//  .options {
-//    width: auto !important;
-//    margin-right: 15px;
-//
-//    .texts {
-//      display: none;
-//    }
-//  }
-//
-//  .options:last-child {
-//    margin-right: 0;
-//  }
-//}
 
 @media (max-width: 810px) {
   .options {
@@ -170,7 +152,7 @@ export default defineComponent({
 
   .icons {
     position: relative;
-    top: 1px;
+    top: 0;
     stroke: white;
     stroke-width: 50px;
     margin-right: 3px;
@@ -178,6 +160,7 @@ export default defineComponent({
 
   .texts {
     font-size: 17px;
+    font-family: cursive;
   }
 
   .drop {
@@ -241,7 +224,7 @@ export default defineComponent({
   }
 
   .option {
-    top: 48px;
+    top: 60px;
     opacity: 1;
   }
 }
@@ -254,6 +237,7 @@ export default defineComponent({
   background: #80c8f8;
   position: absolute;
   transition: width 0.4s;
+  border-radius: 100px;
 }
 
 @media (min-width: 810px) {

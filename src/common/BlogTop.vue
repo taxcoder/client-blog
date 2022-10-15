@@ -1,12 +1,14 @@
 <template>
   <div id="blog-top">
+    <Mask :open="open" @close="close" :zIndex="zIndex" :opacity="opacity"></Mask>
+
     <div class="seat"></div>
     <!-- 顶部导航栏 -->
-    <div class="blog-navigation-bar" :style="navigationBarStyle">
+    <div class="blog-navigation-bar">
       <div class="blog-name"><span>{{ blogName }}</span></div>
       <div class="blog-top-options">
 
-        <icon-text :hideArrowDown="true" :hideNavigationBar="hideNavigationBar">
+        <icon-text :hideArrowDown="true" :hideNavigationBar="hideNavigationBar" @click="openSearch">
           <template #icon>
             <Search/>
           </template>
@@ -71,7 +73,7 @@
         <type-writer :text="motto" v-show="isHide"/>
         <!-- 向下滚动 -->
         <div class="flip-down" @click="flipDown">
-          <el-icon color="white" :size="26">
+          <el-icon :color="theme() ? 'white' : 'black'" :size="24">
             <ArrowDownBold/>
           </el-icon>
         </div>
@@ -82,6 +84,8 @@
     <div class="head-bg"
          :style="[{backgroundImage: 'url('+HeadImage+')'},{'--filter': status ? 'brightness(0.55)' : 'brightness(1)'}]">
     </div>
+
+    <flowing-cloud/>
   </div>
 </template>
 
@@ -94,21 +98,29 @@
  */
 
 //@ts-ignore
-import HeadImage from '@/assets/img/e00dbfe7082c9c50a9aaa8158dc426f1.jpeg'
+import HeadImage from '@/assets/img/t01afea8b58bce1d689.jpg'
 //@ts-ignore
 import {svg} from '@/assets/ts/common.ts'
+//@ts-ignore
+import $ from 'jquery'
 
 import {defineComponent, ref, inject} from 'vue'
 import IconText from "./IconText.vue";
+import Mask from "./Mask.vue";
+import FlowingCloud from "./FlowingCloud.vue";
 
 export default defineComponent({
   name: "BlogTop",
-  components: {IconText},
+  components: {FlowingCloud, Mask, IconText},
   setup() {
     let marginBottom = ref<string>('200px');
     let isHideMotto = ref<boolean>(true);
     let blogNameFontSize = ref<string>('4em');
+    let open = ref<boolean>(false)
+    let zIndex = ref<number>(-999);
+    let opacity = ref<number>(0);
 
+    const windowHeight: any = inject('windowHeight')
     const theme: any = inject('theme')
     const toggle: any = inject('toggle')
     const updateTheme: any = inject('updateTheme')
@@ -125,12 +137,17 @@ export default defineComponent({
       toggle,
       updateTheme,
       status,
-      theme
+      theme,
+      open,
+      zIndex,
+      opacity,
+      windowHeight
     }
   },
   props: {
     blogName: String,
-    hideNavigationBar: Boolean
+    hideNavigationBar: Boolean,
+    scrollTop: Number
   },
   mounted() {
     // 挂载之后根据页面的大小，进行相应的改变
@@ -152,8 +169,6 @@ export default defineComponent({
       if (center) {
         center.scrollIntoView({
           behavior: 'smooth',
-          block: 'start',
-          inline: 'nearest'
         });
       }
     },
@@ -180,7 +195,7 @@ export default defineComponent({
       if (!theme) return;
       theme.removeChild(theme.firstChild)
 
-      if (this.theme) {
+      if (!this.theme()) {
         theme.innerHTML = svg.moon
       } else {
         theme.innerHTML = svg.sun
@@ -189,22 +204,50 @@ export default defineComponent({
     isOpenNavigationBar(theme: boolean, flag: boolean) {
       return theme ? (flag ? {backgroundColor: "#343434", zIndex: '1'} : {}) : (flag ? {
         backgroundColor: 'white',
-        zIndex: '1',
+        zIndex: '999',
         color: 'black'
       } : {})
+    },
+    openSearch() {
+      if (!this.open) {
+        this.open = true;
+        this.zIndex = 999;
+        this.opacity = 1;
+      }
+    },
+    close() {
+      // 关闭查询蒙版
+      this.open = false;
+      this.zIndex = -999;
+      this.opacity = 0;
     }
   },
   computed: {
     isHide() {
       return this.isHideMotto
-    },
-    navigationBarStyle() {
-      return this.isOpenNavigationBar(this.status, !this.hideNavigationBar)
     }
   },
   watch: {
     status(data) {
       this.updateTheme(data)
+    },
+    scrollTop(data) {
+      let bar = $('.blog-navigation-bar')
+      if (data + 72 <= this.windowHeight()) {
+        bar.css('top', '0')
+      } else {
+        bar.css('top', '-72px')
+      }
+
+      if (data + 72 >= this.windowHeight() - this.windowHeight() * 0.15) {
+        bar.css('background', '#f3f3f3').css('color', 'black')
+        let icons: any = bar.children('.blog-top-options').children().children('.icons')
+        icons.css('stroke', 'black')
+      } else {
+        bar.css('background', 'none').css('color', 'white')
+        let icons: any = bar.children('.blog-top-options').children().children('.icons')
+        icons.css('stroke', 'white')
+      }
     }
   }
 })
@@ -225,6 +268,7 @@ export default defineComponent({
   flex-direction: column;
   transition: all 0.6s;
   min-width: 500px;
+  user-select: none;
 
   .seat {
     width: 100%;
@@ -235,6 +279,7 @@ export default defineComponent({
     width: 100%;
     height: 4.5em;
     padding: 0 25px;
+    z-index: 20;
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -242,12 +287,12 @@ export default defineComponent({
     top: 0;
     left: 0;
     min-width: $min-width;
-    transition: background 0.25s, color 0.1s;
+    transition: background 0.25s, color 0.1s,top 0.5s;
 
     .blog-name {
       font-size: 1.2em;
       display: flex;
-      flex: 1;
+      flex: 11;
       font-family: "pacifico", cursive;
       cursor: pointer;
       align-items: center;
@@ -268,6 +313,9 @@ export default defineComponent({
     height: 100%;
     display: flex;
     align-items: center;
+    top: 72px;
+    z-index: -1;
+    position: fixed;
     justify-content: center;
 
     @media (max-height: 400px) and (min-width: 550px) {
@@ -301,10 +349,12 @@ export default defineComponent({
     .flip-down {
       position: absolute;
       bottom: 25px;
+      z-index: 10;
       animation: swing 0.85s infinite;
       animation-direction: alternate;
       animation-timing-function: ease-out;
       cursor: pointer;
+      filter: drop-shadow(0px 0px 0px black);
     }
   }
 
@@ -312,10 +362,10 @@ export default defineComponent({
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: -2;
     transition: all 0.5s;
     filter: var(--filter);
   }
@@ -323,6 +373,10 @@ export default defineComponent({
 
 ::v-deep(.theme) {
   color: black;
+}
+
+.svgDark {
+  stroke: black;
 }
 
 @keyframes HeightMarginBottomZero {
@@ -363,5 +417,4 @@ export default defineComponent({
     opacity: 1;
   }
 }
-
 </style>

@@ -15,10 +15,17 @@ declare module '@vue/runtime-core' {
     BlogFirstScreen: typeof import('./src/components/BlogFirstScreen.vue')['default']
     BlogHome: typeof import('./src/components/BlogHome.vue')['default']
     BlogInformalEssay: typeof import('./src/components/life/BlogInformalEssay.vue')['default']
+    ElBadge: typeof import('element-plus/es')['ElBadge']
     ElIcon: typeof import('element-plus/es')['ElIcon']
+    ElInput: typeof import('element-plus/es')['ElInput']
+    ElPagination: typeof import('element-plus/es')['ElPagination']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
+    ElTag: typeof import('element-plus/es')['ElTag']
     TypeWriter: typeof import('./src/components/TypeWriter.vue')['default']
     WebSiteNavigation: typeof import('./src/components/function/WebSiteNavigation.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }
